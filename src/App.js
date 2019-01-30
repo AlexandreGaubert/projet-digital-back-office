@@ -1,28 +1,35 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+
+import SideBar from './components/SideBar'
+import Header from './components/Header'
+import LesMenus from './pages/LesMenus/LesMenus'
+import LesActivités from './pages/LesActivités/LesActivités'
+import LesNews from './pages/LesNews/LesNews'
+import LaGallerie from './pages/LaGallerie/LaGallerie'
 import './App.css';
+
 
 class App extends Component {
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
+      <Router>
+        <div style={{display: 'flex'}} className="App">
+          <SideBar/>
+          <div style={{display: 'flex', flexDirection: 'column', width: '100%', backgroundColor: '#eaedf2'}}>
+            <Header/>
+            <Route path="/les-menus" component={LesMenus}/>
+            <Route path="/les-activités" component={LesActivités}/>
+            <Route path="/les-news" component={LesNews}/>
+            <Route path="/la-gallerie" component={LaGallerie}/>
+          </div>
+        </div>
+      </Router>
     );
   }
 }
 
 export default App;
+
+window.months = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Octobre', 'Novembre', 'Décembre'];
+window.days = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi' ];
