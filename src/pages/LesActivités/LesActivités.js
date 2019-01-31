@@ -3,6 +3,7 @@ import React, { Component } from "react"
 import EventForm from './EventForm'
 import Table from './Table'
 import Modal from '../../components/Modal'
+import DeletePopup from '../../components/DeletePopup'
 import Button from '../../components/reusable/Button'
 
 const animations = [
@@ -50,13 +51,7 @@ export default class LesActivités extends Component {
         </Modal>
 
         <Modal onClose={this.closeModal.bind(this)} isOpen={deleteIsOpen}>
-          <span style={styles.deleteModal}>
-            <h1>Souhaitez-vous supprimer<br/>cet évènement ?</h1>
-            <span style={{width: '100%', display: 'flex', justifyContent: 'space-around'}}>
-              <Button text="NON" type="warning" style={styles.button}/>
-              <Button text="OUI" type="danger" style={styles.button}/>
-            </span>
-          </span>
+          <DeletePopup no={this.closeModal.bind(this)}/>
         </Modal>
 
       </div>

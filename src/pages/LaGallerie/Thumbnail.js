@@ -1,6 +1,7 @@
 import React, { Component } from "react"
 
 import { withHover } from '../../hoc/withHover'
+import './Thumbnail.css'
 
 class Gallerie extends Component {
   static defaultProps = {
@@ -8,17 +9,26 @@ class Gallerie extends Component {
   }
   state = {
     images: [],
-    galleryOpen: false
+    galleryOpen: false,
+    isShow: false
   }
   constructor(props) {
     super(props)
 
   }
+  componentWillMount() {
+    var that = this;
+    setTimeout(function() {
+      that.setState({isShow: true});
+    }, this.props.delay)
+  }
   render() {
+    if (this.state.isShow === false) return null;
+
     const { images, galleryOpen } = this.state;
     const { hover, name, openGallery } = this.props;
     return(
-      <div {...this.props} onClick={() => openGallery(name)} style={styles.thumbnail}>
+      <div className="thumbnail" {...this.props} onClick={() => openGallery(name)} style={styles.thumbnail}>
         <img style={styles.thumbnailImage} src={require("../../assets/images/galleries/gallery/thumbnail.png")}/>
         <span style={{...styles.overlay, backgroundColor: hover ? 'rgb(0,0,0,.75)' : 'rgb(0,0,0,.50)'}}>
           <p style={{padding: '1em'}}>{name.toUpperCase()}</p>
@@ -30,7 +40,6 @@ class Gallerie extends Component {
 
 const styles = {
   thumbnail: {
-    width: '33.33333333333333%',
     display: 'flex',
     marginTop: '1.5em',
     position: 'relative',

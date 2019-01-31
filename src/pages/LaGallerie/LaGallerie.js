@@ -35,7 +35,12 @@ class LaGallerie extends Component {
       <div style={styles.container}>
         {children}
         {gallery === null ?
-          <List openModal={openModal} openGallery={this.openGallery.bind(this)}/>
+          <div style={{display: 'flex', flexDirection: 'column'}}>
+            <span style={{display: 'flex', margin: '1em 0 0 1em'}}>
+              <i onClick={() => openModal('add')} className="fas fa-plus" style={styles.addBtn}/>
+            </span>
+            <List openModal={openModal} openGallery={this.openGallery.bind(this)}/>
+          </div>
           :
           <Gallerie goBack={this.closeGallery.bind(this)} data={gallery}/>
         }
@@ -46,22 +51,20 @@ class LaGallerie extends Component {
 
 class List extends Component {
   render() {
-    const { openModal, openGallery } = this.props;
+    const { openGallery } = this.props;
+    const galleries = [0, 1, 2, 3, 4, 5, 6]
     return (
       <div style={styles.list}>
-        <i onClick={() => openModal('add')} className="fas fa-plus" style={styles.addBtn}/>
-        <Thumbnail openGallery={openGallery} name="gallery0"/>
-        <Thumbnail openGallery={openGallery} name="gallery1"/>
-        <Thumbnail openGallery={openGallery} name="gallery2"/>
-        <Thumbnail openGallery={openGallery} name="gallery3"/>
-        <Thumbnail openGallery={openGallery} name="gallery4"/>
-        <Thumbnail openGallery={openGallery} name="gallery5"/>
-        <Thumbnail openGallery={openGallery} name="gallery6"/>
-        <Thumbnail openGallery={openGallery} name="gallery7"/>
-        <Thumbnail openGallery={openGallery} name="gallery8"/>
-        <Thumbnail openGallery={openGallery} name="gallery9"/>
-        <Thumbnail openGallery={openGallery} name="gallery10"/>
-        <Thumbnail openGallery={openGallery} name="gallery11"/>
+        {
+          galleries.map((gallery, key) => {
+            const name = 'gallery' + key;
+            return (
+              <div style={styles.listSlot}>
+                <Thumbnail delay={100 * key} openGallery={openGallery} name={name}/>
+              </div>
+            )
+          })
+        }
       </div>
     )
   }
@@ -70,12 +73,17 @@ class List extends Component {
 const styles = {
   container: {
     width: '100%',
-    height: '100%'
+    height: '100%',
   },
   list: {
     display: 'flex',
     flexWrap: 'wrap',
-    position: 'relative'
+  },
+  listSlot: {
+    width: '33.33333333333333%',
+    display: 'flex',
+    marginTop: '1.5em',
+    position: 'relative',
   },
   addBtn: {
     fontSize: '4vh',
@@ -84,7 +92,6 @@ const styles = {
     color: 'white',
     backgroundColor: '#2f383d',
     boxShadow: '0px 0px 8px 0px rgba(0,0,0,0.75)',
-    margin: 'auto',
     cursor: 'pointer'
   },
 }

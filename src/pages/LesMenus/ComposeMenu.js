@@ -4,7 +4,7 @@ import Button from '../../components/reusable/Button'
 
 const days = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi']
 
-export default class Menus extends React.Component {
+export default class ComposeMenu extends React.Component {
   state = {
     plat_1: '',
     plat_2: '',

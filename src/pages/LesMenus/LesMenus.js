@@ -1,8 +1,48 @@
 import React, { Component } from "react"
 
-import Menus from './Menus'
-import Results from './Results'
+import ComposeMenu from './ComposeMenu'
+import List from './List'
 import './styles.css'
+
+
+const menus = [
+  {
+    from: "2019-01-28",
+    to: "2019-02-01",
+    plat_1: "escaloppe à la crème",
+    plat_2: 'cordon bleu',
+    plat_3: 'Jambon',
+    entree_1: 'coquillettes',
+    entree_2: 'chou farci'
+  },
+  {
+    from: "2019-01-28",
+    to: "2019-02-01",
+    plat_1: "escaloppe à la crème",
+    plat_2: 'cordon bleu',
+    plat_3: 'Jambon',
+    entree_1: 'coquillettes',
+    entree_2: 'chou farci'
+  },
+  {
+    from: "2019-01-28",
+    to: "2019-02-01",
+    plat_1: "escaloppe à la crème",
+    plat_2: 'cordon bleu',
+    plat_3: 'Jambon',
+    entree_1: 'coquillettes',
+    entree_2: 'chou farci'
+  },
+  {
+    from: "2019-01-28",
+    to: "2019-02-01",
+    plat_1: "escaloppe à la crème",
+    plat_2: 'cordon bleu',
+    plat_3: 'Jambon',
+    entree_1: 'coquillettes',
+    entree_2: 'chou farci'
+  },
+]
 
 export default class LesMenus extends Component {
   static defaultProps = {
@@ -24,13 +64,7 @@ export default class LesMenus extends Component {
     const { selected } = this.state;
     return(
       <div style={styles.container}>
-
-        <div style={styles.nav}>
-          <span onClick={() => this.select("menus")} className={"navItem"} style={{...styles.navItem, borderRadius: '20px 0 0 20px'}}>Menus</span>
-          <span onClick={() => this.select("results")} className={"navItem"} style={{...styles.navItem, borderRadius: '0 20px 20px 0'}}>Grille</span>
-        </div>
-
-        {selected === "menus" ? <Menus/> : selected === "results" ? <Results/> : null}
+        <List menus={menus}/>
       </div>
     )
   }
