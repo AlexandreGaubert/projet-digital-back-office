@@ -1,5 +1,6 @@
 import React, { Component } from "react"
 
+import { store } from '../../redux/store'
 
 export default class Navigator extends Component {
   constructor(props) {
@@ -21,7 +22,12 @@ export default class Navigator extends Component {
     var prevMonday = monday;
 
     prevMonday.setDate(monday.getDate() - 7)
-    this.setState(prevstate => {return {monday: prevMonday}});
+    this.setState(
+      prevstate => {
+        store.dispatch({type: 'GET_ACTIVITY', data: {monday: monday.toISOString().slice(0,10)}})
+        return {monday: prevMonday}
+      }
+    );
   }
 
   nextWeek() {
@@ -29,7 +35,12 @@ export default class Navigator extends Component {
     var nextMonday = monday;
 
     nextMonday.setDate(monday.getDate() + 7)
-    this.setState(prevstate => {return {monday: nextMonday}});
+    this.setState(
+      prevstate => {
+        store.dispatch({type: 'GET_ACTIVITY', data: {monday: monday.toISOString().slice(0,10)}})
+        return {monday: nextMonday}
+      }
+    );
   }
   render() {
     const { monday } = this.state;

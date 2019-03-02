@@ -5,20 +5,15 @@ import Table from './Table'
 import Modal from '../../components/Modal'
 import DeletePopup from '../../components/DeletePopup'
 import Button from '../../components/reusable/Button'
-
-const animations = [
-  {name: "mardi de l'ourme", salle: 'salle de loisir', date: new Date("12/01/2019")},
-  {name: "mardi de l'ourme", salle: 'salle de loisir', date: new Date("12/11/2019")},
-  {name: "mardi de l'ourme", salle: 'salle de loisir', date: new Date("12/13/2019")},
-  {name: "mardi de l'ourme", salle: 'salle de loisir', date: new Date("12/29/2019")}
-]
+import { store } from '../../redux/store'
 
 export default class LesActivités extends Component {
   state = {
     isEdit: false,
     isAdd: false,
     isDelete: false,
-    rowData: null
+    rowData: null,
+    activities: []
   }
   constructor(props) {
     super(props);
@@ -32,14 +27,25 @@ export default class LesActivités extends Component {
   closeModal() {
     this.setState({editIsOpen: false, addIsOpen: false, deleteIsOpen: false});
   }
+  componentDidMount() {
+    var monday = new Date();
+    monday.setDate(monday.getDate() - monday.getDay() + 1)
+    
+    this.unsubscribe = store.subscribe(() => this.setState({activities: store.getState().activities.activities}))
+    store.dispatch({type: 'GET_ACTIVITY', data: {monday: monday.toISOString().slice(0, 10)}})
+  }
+  componentWillUnmount() {
+    this.unsubscribe();
+  }
   render() {
-    const { editIsOpen, addIsOpen, deleteIsOpen, rowData } = this.state;
+    console.log(store.getState());
+    const { editIsOpen, addIsOpen, deleteIsOpen, rowData, activities } = this.state;
     return(
       <div style={styles.container}>
 
         <Table
           openModal={this.openModal}
-          animations={animations}
+          animations={activities}
         />
 
         <Modal onClose={this.closeModal.bind(this)} isOpen={addIsOpen}>
@@ -51,7 +57,7 @@ export default class LesActivités extends Component {
         </Modal>
 
         <Modal onClose={this.closeModal.bind(this)} isOpen={deleteIsOpen}>
-          <DeletePopup no={this.closeModal.bind(this)}/>
+          <DeletePopup yes={() => {this.closeModal(); store.dispatch({type: 'DELETE_ACTIVITY', data: this.state.rowData._id})}} no={this.closeModal.bind(this)}/>
         </Modal>
 
       </div>

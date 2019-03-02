@@ -1,0 +1,8 @@
+.gallerie-image {
+  transition: all .5s
+}
+
+.gallerie-image:hover {
+  transform: scale(1.15);
+  cursor: pointer;
+}

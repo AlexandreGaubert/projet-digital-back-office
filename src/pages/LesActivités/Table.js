@@ -26,11 +26,12 @@ export default class Table extends Component {
 const Head = (props) => {
   return (
     <tr style={styles.tableHead}>
-      <th></th>
-      <th></th>
       <th style={styles.addBtnWrapper}>
         <i onClick={() => props.openModal('add')} className="fas fa-plus" style={styles.addBtn}/>
       </th>
+      <th></th>
+      <th></th>
+      <th></th>
     </tr>
   )
 }
@@ -45,7 +46,8 @@ const styles = {
     borderRadius: '30px 30px 0 0',
     borderSpacing: 0,
     backgroundColor: '#1f282d',
-    border: '1px solid #2f383d'
+    border: '1px solid #2f383d',
+    tableLayout: 'fixed'
   },
   tableHead: {
     height: '2em'
@@ -61,6 +63,6 @@ const styles = {
     backgroundColor: '#2f383d',
     boxShadow: '0px 0px 8px 0px rgba(0,0,0,0.75)',
     margin: '.3em',
-    marginLeft: 'auto',
+    marginRight: 'auto',
   }
 }

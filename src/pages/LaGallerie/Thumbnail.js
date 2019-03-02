@@ -8,7 +8,6 @@ class Gallerie extends Component {
 
   }
   state = {
-    images: [],
     galleryOpen: false,
     isShow: false
   }
@@ -25,11 +24,11 @@ class Gallerie extends Component {
   render() {
     if (this.state.isShow === false) return null;
 
-    const { images, galleryOpen } = this.state;
-    const { hover, name, openGallery } = this.props;
+    const { galleryOpen } = this.state;
+    const { hover, name, id, openGallery, image } = this.props;
     return(
-      <div className="thumbnail" {...this.props} onClick={() => openGallery(name)} style={styles.thumbnail}>
-        <img style={styles.thumbnailImage} src={require("../../assets/images/galleries/gallery/thumbnail.png")}/>
+      <div className="thumbnail" {...this.props} onClick={() => openGallery(id)} style={styles.thumbnail}>
+        <img style={styles.thumbnailImage} src={require('./images/' + image)}/>
         <span style={{...styles.overlay, backgroundColor: hover ? 'rgb(0,0,0,.75)' : 'rgb(0,0,0,.50)'}}>
           <p style={{padding: '1em'}}>{name.toUpperCase()}</p>
         </span>

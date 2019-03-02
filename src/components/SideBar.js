@@ -19,9 +19,9 @@ export default class SideBar extends Component {
           <span style={styles.label}>TÉLÉVISEUR</span>
           <Item name="Les Menus" icon="fas fa-utensils" path="/les-menus"/>
           <Item name="Les Activités" icon="fas fa-calendar" path="/les-activités"/>
-          <Item name="Les News" icon="fas fa-info-circle" path="/les-news"/>
+          <Item name="Les Nouvelles" icon="fas fa-info-circle" path="/les-news"/>
           <Item name="La Galerie" icon="fas fa-images" path="/la-gallerie"/>
-          <Item name="Les Avis" icon="fas fa-pencil-alt"/>
+          <Item name="Les Avis" icon="fas fa-pencil-alt" path="/les-avis"/>
         </ul>
       </div>
     )

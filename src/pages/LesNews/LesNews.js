@@ -4,24 +4,8 @@ import List from './List';
 import Form from './Form';
 import Modal from '../../components/Modal'
 import Button from '../../components/reusable/Button'
-
-const news = [
-  {
-    title: "La passerelle est démontée",
-    body: "Pour le moment il faudra passer par la porte exterieur merci de votre compréhension Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-    date: new Date("2019-01-12")
-  },
-  {
-    title: "Venez prendre votre code Famileo",
-    body: "Venez demander votre code Famileo au secreteriat, vous pourrez le communiquer à votre famille afin qu'elle puisse vous envoyer de leurs nouvelles",
-    date: new Date("2018-11-26")
-  },
-  {
-    title: "Le père noël arrive avec son traineau de rennes !",
-    body: "Il passera avec son traineau cet après midi devant la résidence, il s'arretra et vous pourrez prendre une photo avec lui et demander des cadeaux !",
-    date: new Date("2018-11-20")
-  }
-]
+import { getNews } from '../../redux/actions/newActions'
+import { store } from '../../redux/store'
 
 class LesNews extends Component {
   static defaultProps = {
@@ -31,12 +15,15 @@ class LesNews extends Component {
     editIsOpen: false,
     addIsOpen: false,
     deleteIsOpen: false,
+    news: store.getState().news.news
   }
   constructor(props) {
     super(props)
 
+    this.socket = document.socket;
     this.openModal = this.openModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
+    this.delete = this.delete.bind(this);
   }
   openModal(modal, data) {
     this.setState({[modal + "IsOpen"] : true, newsData: data});
@@ -44,8 +31,27 @@ class LesNews extends Component {
   closeModal() {
     this.setState({editIsOpen: false, addIsOpen: false, deleteIsOpen: false});
   }
+  componentDidMount() {
+    this.unsubscribe = store.subscribe(() => {
+      var news = store.getState().news.news;
+
+      news.sort((a, b) => {
+        return (new Date(b.date) - new Date(a.date))
+      })
+
+      this.setState({news: news});
+    })
+    store.dispatch(getNews())
+  }
+  componentWillUnmount() {
+    this.unsubscribe()
+  }
+  delete() {
+    store.dispatch({type: 'DELETE_NEWS', data: this.state.newsData._id})
+    this.closeModal()
+  }
   render() {
-    const { editIsOpen, addIsOpen, deleteIsOpen, newsData } = this.state;
+    const { editIsOpen, addIsOpen, deleteIsOpen, newsData, news } = this.state;
     return(
       <div style={styles.container}>
         <span style={styles.addBtnWrapper}>
@@ -64,8 +70,8 @@ class LesNews extends Component {
           <span style={styles.deleteModal}>
             <h1>Souhaitez-vous supprimer<br/>cette info ?</h1>
             <span style={{width: '100%', display: 'flex', justifyContent: 'space-around'}}>
-              <Button text="NON" type="warning" style={styles.button}/>
-              <Button text="OUI" type="danger" style={styles.button}/>
+              <Button action={this.closeModal} text="NON" type="warning" style={styles.button}/>
+              <Button action={this.delete} text="OUI" type="danger" style={styles.button}/>
             </span>
           </span>
         </Modal>
@@ -82,7 +88,7 @@ const styles = {
     display: 'flex',
     cursor: 'pointer',
     fontSize: '2vw',
-    marginLeft: 'auto',
+    marginRight: 'auto',
     width: 'max-content',
     marginTop: '.5em'
   },

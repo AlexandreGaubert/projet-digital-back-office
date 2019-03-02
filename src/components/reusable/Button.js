@@ -21,12 +21,12 @@ export default class Button extends Component {
     window.confirm('Did you clicked me ?')
   }
   render() {
-    const { action, text, type, style, icon } = this.props;
+    const { action, text, type, style, icon, bgColor } = this.props;
     const { pressed } = this.state;
 
     var mergedStyle = {
       ...style,
-      backgroundColor: colors[type],
+      backgroundColor: bgColor || colors[type],
       transition: 'transform .1s',
       transform: pressed ? 'scale(0.95)' : 'scale(1)',
       cursor: 'pointer',

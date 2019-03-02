@@ -1,6 +1,8 @@
 import React, { Component } from "react"
 
 import Button from '../../components/reusable/Button'
+import {store} from '../../redux/store'
+import {createNews} from '../../redux/actions/newActions'
 
 export default class Form extends Component {
   static defaultProps = {
@@ -8,6 +10,7 @@ export default class Form extends Component {
   }
   constructor(props) {
     super(props)
+    this.socket = document.socket;
     if (props.type === "create") {
       this.state = {
         titre: '',
@@ -22,9 +25,16 @@ export default class Form extends Component {
       }
     }
     this.onChange = this.onChange.bind(this);
+    this.submit = this.submit.bind(this);
   }
   onChange(e) {
     this.setState({[e.target.name]: e.target.value});
+  }
+  submit() {
+    if (this.props.type === 'create')
+      store.dispatch({type: 'CREATE_NEWS', data: this.state})
+    else
+      store.dispatch({type: 'EDIT_NEWS', data: this.state})
   }
   render() {
     const { title, date, body } = this.state;
@@ -32,7 +42,7 @@ export default class Form extends Component {
     return(
       <div style={styles.container}>
         <h1 style={styles.title}><i className={"fas fa-" + (type === 'edit' ? "pencil-alt" : "plus")}/>
-          {(type === "create" ? " Ajouter" : (type === "edit" ? " Editer" : null))}
+          {(type === "create" ? " Ajouter" : (type === "edit" ? " Editer" : null)) + " une News"}
         </h1>
         <input
           value={title}
@@ -54,10 +64,14 @@ export default class Form extends Component {
           style={{...styles.input, marginTop: 0}}
           type="date"
         />
-        <Button text={type === 'create' ? "AJOUTER" : (type === 'edit' ? "EDITER" : null)} type='submit' style={styles.button}/>
+        <Button action={this.submit} text={type === 'create' ? "AJOUTER" : (type === 'edit' ? "EDITER" : null)} style={styles.button}/>
       </div>
     )
   }
+}
+
+function hello() {
+  console.log('hello');
 }
 
 const styles = {

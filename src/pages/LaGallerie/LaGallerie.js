@@ -4,6 +4,7 @@ import Gallerie from './Gallerie'
 import Thumbnail from './Thumbnail'
 import Form from './Form'
 import { withCRUDLModal } from '../../hoc/withCRUDLModal'
+import { store } from '../../redux/store'
 
 class LaGallerie extends Component {
   static defaultProps = {
@@ -11,26 +12,29 @@ class LaGallerie extends Component {
   }
   state = {
     images: [],
+    galleries: store.getState().galleries.galleries,
     gallery: null
   }
   constructor(props) {
     super(props)
 
   }
-  openGallery(name) {
-    var gallery = {name: name, images: []}
-    var req = require.context("../../assets/images/galleries/gallery");
-    req.keys().forEach(function(key){
-      gallery.images.push(req(key))
-    });
+  openGallery(id) {
+    const gallery = this.state.galleries.find(item => item._id === id);
+    console.log(gallery);
     this.setState({gallery: gallery});
   }
   closeGallery() {
     this.setState({gallery: null});
   }
+  componentDidMount() {
+    store.subscribe(() => {this.setState({galleries: store.getState().galleries.galleries})})
+    store.dispatch({type: 'GET_GALLERY'})
+  }
   render() {
     const { children, openModal } = this.props;
-    const { gallery } = this.state;
+    const { galleries, gallery } = this.state;
+    console.log(galleries);
     return(
       <div style={styles.container}>
         {children}
@@ -39,7 +43,7 @@ class LaGallerie extends Component {
             <span style={{display: 'flex', margin: '1em 0 0 1em'}}>
               <i onClick={() => openModal('add')} className="fas fa-plus" style={styles.addBtn}/>
             </span>
-            <List openModal={openModal} openGallery={this.openGallery.bind(this)}/>
+            <List galleries={galleries} openModal={openModal} openGallery={this.openGallery.bind(this)}/>
           </div>
           :
           <Gallerie goBack={this.closeGallery.bind(this)} data={gallery}/>
@@ -51,8 +55,7 @@ class LaGallerie extends Component {
 
 class List extends Component {
   render() {
-    const { openGallery } = this.props;
-    const galleries = [0, 1, 2, 3, 4, 5, 6]
+    const { openGallery, galleries } = this.props;
     return (
       <div style={styles.list}>
         {
@@ -60,7 +63,7 @@ class List extends Component {
             const name = 'gallery' + key;
             return (
               <div style={styles.listSlot}>
-                <Thumbnail delay={100 * key} openGallery={openGallery} name={name}/>
+                <Thumbnail delay={100 * key} openGallery={openGallery} name={gallery.name} id={gallery._id} image={gallery.images[0]}/>
               </div>
             )
           })
@@ -81,6 +84,7 @@ const styles = {
   },
   listSlot: {
     width: '33.33333333333333%',
+    height: "35vh",
     display: 'flex',
     marginTop: '1.5em',
     position: 'relative',

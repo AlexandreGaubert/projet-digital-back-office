@@ -1,6 +1,7 @@
 import React, { Component } from "react"
 
 import Button from '../../components/reusable/Button'
+import { store } from '../../redux/store'
 
 export default class EventForm extends Component {
   static defaultProps = {
@@ -11,7 +12,9 @@ export default class EventForm extends Component {
     if (props.type === "create") {
       this.state = {
         name: '',
-        salle: '',
+        salle: 'Loisir',
+        beginAt: '15:00',
+        endAt: '16:00',
         date: new Date().toISOString().slice(0, 10)
       }
     }
@@ -22,9 +25,17 @@ export default class EventForm extends Component {
       }
     }
     this.onChange = this.onChange.bind(this);
+    this.submit = this.submit.bind(this);
   }
   onChange(e) {
+    console.log(e.target.value);
     this.setState({[e.target.name]: e.target.value});
+  }
+  submit() {
+    if (this.props.type === 'create')
+      store.dispatch({type: 'CREATE_ACTIVITY', data: this.state})
+    else if (this.props.type === 'edit')
+      store.dispatch({type: 'EDIT_ACTIVITY', data: this.state})
   }
   render() {
     const { name, date, salle } = this.state;
@@ -41,7 +52,7 @@ export default class EventForm extends Component {
           placeholder="Nom..."
           style={{...styles.input, margin: 0}}
         />
-        <span style={{display: 'flex', alignItems: 'center', width: '100%', justifyContent: 'space-between'}}>
+        <span style={styles.inputGroup}>
           <select name="salle" selected={salle} onChange={this.onChange} style={{...styles.input, width: '45%'}}>
             <option>Loisir</option>
             <option>Restaurant</option>
@@ -55,7 +66,26 @@ export default class EventForm extends Component {
             type="date"
           />
         </span>
-        <Button text={type === 'create' ? "AJOUTER" : (type === 'edit' ? "EDITER" : null)} type='submit' style={styles.button}/>
+        <span style={styles.inputGroup}>
+          <p style={{fontSize: '2vw', margin: '0 1em', fontWeight: 'bold'}}>de</p>
+          <input
+            value={this.state.beginAt}
+            name="beginAt"
+            onChange={this.onChange}
+            style={{...styles.input, width: '45%'}}
+            type="time"
+          />
+          <p style={{fontSize: '2vw', margin: '0 1em', fontWeight: 'bold'}}>à</p>
+          <input
+            value={this.state.endAt}
+            name="endAt"
+            onChange={this.onChange}
+            style={{...styles.input, width: '45%'}}
+            type="time"
+            placeholder="de"
+          />
+        </span>
+        <Button action={this.submit} text={type === 'create' ? "AJOUTER" : (type === 'edit' ? "EDITER" : null)} type='submit' style={styles.button}/>
       </div>
     )
   }
@@ -83,5 +113,11 @@ const styles = {
     padding: '.5em 0',
     fontSize: '1.5em',
     margin: '.5em 0'
+  },
+  inputGroup: {
+    display: 'flex',
+    alignItems: 'center',
+    width: '100%',
+    justifyContent: 'space-between',
   }
 }

@@ -22,6 +22,7 @@ export default class Row extends Component {
 
   render() {
     const { data, index, openModal } = this.props;
+    const date = new Date(data.date)
     const { hover } = this.state;
     console.log(hover);
     return(
@@ -32,12 +33,13 @@ export default class Row extends Component {
       >
         <td>{data.name}</td>
         <td>{data.salle}</td>
+        <td>{window.days[date.getDay()]}</td>
         <td style={{position: 'relative'}}>
-          {window.days[data.date.getDay()]}
+          {`${data.beginAt} - ${data.endAt}`}
           {!hover ? null :
             <span style={styles.buttonGroup}>
               <span onClick={() => openModal("edit", data)} style={{...styles.button, backgroundColor: '#5188D8'}}><i className="fas fa-pencil-alt"/></span>
-              <span onClick={() => openModal('delete')} style={{...styles.button, backgroundColor: '#BA3F1D'}}><i className="fas fa-trash"/></span>
+              <span onClick={() => openModal('delete', data)} style={{...styles.button, backgroundColor: '#BA3F1D'}}><i className="fas fa-trash"/></span>
             </span>
           }
         </td>
@@ -50,7 +52,8 @@ const styles = {
   row: {
     border: 'none',
     height: '2.5em',
-    cursor: 'default'
+    cursor: 'default',
+    padding: '0 1em'
   },
   buttonGroup: {
     position: 'absolute',

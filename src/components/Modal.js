@@ -3,11 +3,15 @@ import React, { Component } from "react"
 export default class Modal extends Component {
   render() {
     const { isOpen, onClose, children } = this.props
+
+    const childrenWithProps = React.Children.map(children, child =>
+      React.cloneElement(child, { onClose: onClose })
+    );
     if (isOpen === true) {
       return (
         <div style={styles.modal}>
           <span style={styles.content}>
-            {children}
+            {childrenWithProps}
           </span>
           <span onClick={onClose} style={styles.modalOverlay}/>
         </div>
@@ -19,15 +23,16 @@ export default class Modal extends Component {
 
 const styles = {
   modal: {
-    position: 'absolute',
+    position: 'fixed',
     display: 'flex',
     top: 0,
     left: 0,
     width: '100%',
     height: '100%',
+    zIndex: 1000000
   },
   content: {
-    margin: '5% auto',
+    margin: 'auto',
     height: 'fit-content',
     zIndex: 1000
   },

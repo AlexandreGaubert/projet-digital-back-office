@@ -1,11 +1,14 @@
 import React, { Component } from "react"
 
+const colors = ["#0cce6b", "#38b6ff", "#dced31", '#ed8ba3', "#a6a6a6", "#ffbd59"]
+
 export default class ItemNews extends Component {
   static defaultProps = {
 
   }
   state = {
-    hover: false
+    hover: false,
+    bgColor: colors[Math.floor(Math.random() * Math.floor(6))]
   }
   constructor(props) {
     super(props)
@@ -19,16 +22,19 @@ export default class ItemNews extends Component {
   onMouseLeave() {
     this.setState({hover: false});
   }
+
   render() {
     const { data, openModal } = this.props;
+    const date = new Date(data.date);
     const { hover } = this.state;
+    data.body.replace(/\n/g, "<br />");
     return(
-      <div onMouseEnter={this.onMouseEnter} onMouseLeave={this.onMouseLeave} style={{...styles.container, backgroundColor: this.props.bgColor}}>
+      <div onMouseEnter={this.onMouseEnter} onMouseLeave={this.onMouseLeave} style={{...styles.container, backgroundColor: this.state.bgColor}}>
         <span style={styles.title}>
           {data.title}
         </span>
         <span style={styles.date}>
-          {`${window.days[data.date.getDay()]} ${data.date.getDate()} ${window.months[data.date.getMonth()]}`}
+          {`${window.days[date.getDay()]} ${date.getDate()} ${window.months[date.getMonth()]}`}
         </span>
         {
           data.body && <span style={styles.body}>{data.body}</span>
@@ -36,7 +42,7 @@ export default class ItemNews extends Component {
         {!hover ? null :
           <span style={styles.buttonGroup}>
             <span onClick={() => openModal("edit", data)} style={{...styles.button, backgroundColor: '#5188D8'}}><i className="fas fa-pencil-alt"/></span>
-            <span onClick={() => openModal("delete")} style={{...styles.button, backgroundColor: '#BA3F1D'}}><i className="fas fa-trash"/></span>
+            <span onClick={() => openModal("delete", data)} style={{...styles.button, backgroundColor: '#BA3F1D'}}><i className="fas fa-trash"/></span>
           </span>
         }
       </div>
@@ -65,7 +71,8 @@ const styles = {
     textAlign: 'left',
     margin: '1.5em',
     fontWeight: 'bold',
-    fontSize: '1.5vw'
+    fontSize: '1.5vw',
+    whiteSpace: 'pre-wrap'
   },
   date: {
     position: 'absolute',

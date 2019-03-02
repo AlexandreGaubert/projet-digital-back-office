@@ -1,54 +1,60 @@
 import React, { Component } from "react"
 import Slider from 'react-slick'
 
-import './Diaporama.css'
-
 export default class Diaporama extends Component {
   static defaultProps = {
-
+    index: 0
   }
   state = {
-    index: 0
+    index: this.props.index
   }
   constructor(props) {
     super(props)
+
     this.nextImage = this.nextImage.bind(this);
+    this.prevImage = this.prevImage.bind(this);
   }
   nextImage() {
-    this.setState(prevstate => {return {index: prevstate.index + 1 > this.props.images.length - 1 ? 0 : prevstate.index + 1}});
+    const { images } = this.props;
+
+    this.setState(prevstate => {return {index: prevstate.index + 1 > images.length - 1 ? 0 : prevstate.index + 1}});
+  }
+  prevImage() {
+    const { images } = this.props;
+
+    this.setState(prevstate => {return {index: prevstate.index - 1 < 0 ? images.length - 1 : prevstate.index - 1}});
+  }
+  onKeyPress(e) {
+    if (e.key === "ArrowLeft")
+      this.prevImage()
+    if (e.key === "ArrowRight")
+      this.nextImage()
+    if (e.key === 'Escape')
+      this.props.onClose()
+  }
+  componentDidMount() {
+    document.addEventListener('keydown', this.onKeyPress.bind(this))
+  }
+  componentWillUnmount() {
+    document.removeEventListener('keydown', this.onKeyPress.bind(this))
   }
   render() {
     const { index } = this.state;
-    const { images, isOpen, onClose } = this.props;
-    const settings = {
-      accessibility: true,
-      autoplay: true,
-      dots: false,
-      infinite: true,
-      speed: 500,
-      slidesToShow: 1,
-      slidesToScroll: 1,
-      nextArrow: <NextArrow/>,
-      prevArrow: <PrevArrow/>,
-    };
-    console.log(isOpen);
+    const { images, onClose } = this.props;
+    const curImg = images[index]
     return(
-      <div style={{...styles.container, display: isOpen ? 'flex' : 'none'}}>
-        <div onClick={onClose} style={styles.overlay}/>
-        <div style={styles.diaporama}>
-          <Slider {...settings}>
-            {images.map((image, key) => {
-              return <img src={image} key={key}/>
-            })}
-          </Slider>
-        </div>
+      <div onKeyPress={(e) => this.onKeyPress(e)} style={styles.container}>
+        <PrevArrow onClick={this.prevImage}/>
+        <img style={styles.image} src={require('./images/' + curImg)}/>
+        <NextArrow onClick={this.nextImage}/>
+        <i style={styles.overlay} onClick={this.onClose}/>
       </div>
     )
   }
 }
 
 function NextArrow(props) {
-  const { className, style, onClick } = props;
+  const { onClick } = props;
   return (
     <div
       onClick={onClick}
@@ -60,7 +66,7 @@ function NextArrow(props) {
 }
 
 function PrevArrow(props) {
-  const { className, style, onClick } = props;
+  const { onClick } = props;
   return (
     <div
       onClick={onClick}
@@ -71,34 +77,26 @@ function PrevArrow(props) {
   );
 }
 
-const winWidth = document.body.clientWidth
-const winHeight = document.body.clientHeight
-
 const styles = {
   container: {
     display: 'flex',
-    position: 'absolute',
+    position: 'fixed',
     width: '100%',
     height: '100%',
     top: 0,
     left: 0,
-    color: 'white'
-  },
-  diaporama: {
-    margin: 'auto',
-    width: '90%',
-    maxHeight: '90vh',
-    zIndex: 20000
+    color: 'white',
+    overflow: 'hidden',
   },
   image: {
-    width: '100%',
-    height: '100%'
+    maxHeight: '90vh',
+    maxWidth: '90vw',
+    zIndex: '1000',
+    margin: 'auto'
   },
   arrow: {
     display: 'flex',
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
+    zIndex: '1000',
     fontSize: '4vw',
   },
   overlay: {

@@ -9,7 +9,7 @@ class DeletePopup extends Component {
         <h1>Souhaitez-vous supprimer<br/>cet objet ?</h1>
         <span style={{width: '100%', display: 'flex', justifyContent: 'space-around'}}>
           <Button action={this.props.no} text="NON" type="warning" style={styles.button}/>
-          <Button text="OUI" type="danger" style={styles.button}/>
+          <Button action={this.props.yes} text="OUI" type="danger" style={styles.button}/>
         </span>
       </span>
     );
