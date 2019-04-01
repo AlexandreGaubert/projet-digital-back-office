@@ -6,7 +6,8 @@ var activitySchema = new Schema({
   salle: String,
   beginAt: String,
   endAt: String,
-  date: String
+  date: String,
+  color: String
 });
 
 module.exports = mongoose.model("activity", activitySchema);

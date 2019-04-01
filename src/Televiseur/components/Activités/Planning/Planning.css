@@ -1,0 +1,142 @@
+.PlanningContainer {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: row;
+}
+
+.PlanningNavigator {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+}
+
+.PlanningNavigator-nextWeekButton {
+  display: flex;
+  flex-direction: row;
+  font-size: 2vw;
+  align-items: center;
+  margin: 1%;
+  margin-left: auto;
+  width: fit-content;
+  border-radius: 10px;
+  background-color: #b71c1c;
+  color: #ffebee;
+  padding: .2em .5em
+}
+
+.PlanningNavigator-nextWeekButton > i {
+  margin-left: 1em
+}
+
+.PlanningNavigator-nextWeekButton > p {
+  margin: 0;
+}
+
+.PlanningDaysList {
+  display: flex;
+  flex-direction: row;
+  height: -webkit-fill-available;
+  width: -webkit-fill-available;
+}
+
+.PlanningDay {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 14.285714%; /* exacly 100% / 7 */
+  height: -webkit-fill-available;
+}
+
+.PlanningDay-header > p {
+  font-size: inherit;
+  margin: 0;
+  text-align: left;
+}
+
+.PlanningDay-day {
+  font-size: 2vw;
+}
+
+.PlanningDay-date {
+  font-weight: bold;
+}
+
+.PlanningDay-list {
+  height: -webkit-fill-available;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.PlanningDay-list-activity {
+  position: absolute;
+  width: 100%;
+  background-color: aqua;
+  border-radius: 10px;
+  -webkit-box-shadow: 0px 0px 5px rgb(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 95%;
+  margin: 0 auto;
+}
+
+.PlanningDay-list-activity > p {
+  margin: 0;
+  font-size: 90%;
+  margin: 2% 0
+}
+
+.PlanningDay-list-activity > p:nth-child(1) {
+  font-weight: bold;
+  font-size: 110%
+}
+
+.PlanningDay-list-activity > p:nth-child(2) {
+  font-style: italic;
+}
+
+.PlanningDay-list-item {
+  border-bottom: 1px solid #ccc
+}
+
+.PlanningDay-list-item:first-child {
+  border-top: 1px solid #ccc
+}
+
+.PlanningHoursList-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 0 .5em;
+}
+
+.PlanningHoursList-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.PlanningHour {
+  font-size: 1.5vw;
+  font-weight: bold;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  width: 100%;
+  text-align: center;
+}
+
+.PlanningActivitiesList {
+  width: -webkit-fill-available;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.PlanningActivitiesList-line {
+  width: 100%;
+  height: 1px;
+  border-top: 1px solid #ccc;
+}

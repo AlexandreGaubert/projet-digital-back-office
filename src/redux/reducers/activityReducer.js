@@ -3,7 +3,8 @@ import { store } from '../store'
 import { update } from '../CRUDactions'
 
 const initialState = {
-  activities: []
+  activities: [],
+  hours: ['10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00']
 }
 
 export function activities(state = initialState, action) {
@@ -54,13 +55,16 @@ export function activities(state = initialState, action) {
     case "DELETE_ACTIVITY":
       APICall('DELETE_ACTIVITY', document.socket, action.data)
       .then((res) => {
-        return store.dispatch({type: "GET_ACTIVITY"})
+        return store.dispatch({type: "DELETE_ACTIVITY_SUCCESS", data: res.deletedID})
       })
       .catch((err) => {
         return store.dispatch({type: "DELETE_ACTIVITY_ERROR"})
       })
       break;
-    default:
+    case "DELETE_ACTIVITY_SUCCESS":
+      return {...state, activities: state.activities.filter(activity => activity._id !== action.data)}
+    case "DELETE_ACTIVITY_ERROR":
+      return state
   }
   return state
 }

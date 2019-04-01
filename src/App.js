@@ -2,36 +2,32 @@ import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import openSocket from 'socket.io-client';
 
-import SideBar from './components/SideBar'
-import Header from './components/Header'
-import LesMenus from './pages/LesMenus/LesMenus'
-import LesActivités from './pages/LesActivités/LesActivités'
-import LesNews from './pages/LesNews/LesNews'
-import LaGallerie from './pages/LaGallerie/LaGallerie'
-import LesAvis from './pages/LesAvis/LesAvis'
+import BackOffice from './BackOffice/BackOffice'
+import Televiseur from './Televiseur/Televiseur'
+import SandBox from './SandBox'
+import { store } from './redux/store'
 import './App.css';
 
 document.socket = openSocket('http://localhost:8080')
 
 class App extends Component {
+  state = {
+  }
   componentDidMount() {
+  }
+  componentWillUnmount() {
+    //remove socket !!!!
   }
   render() {
     return (
       <Router>
-        <div style={{display: 'flex'}} className="App">
-          <SideBar/>
-          <div style={{display: 'flex', flexDirection: 'column', width: '100%', backgroundColor: '#eaedf2'}}>
-            <Header/>
-            <Route path="/les-menus" component={LesMenus}/>
-            <Route path="/les-activités" component={LesActivités}/>
-            <Route path="/les-news" component={LesNews}/>
-            <Route path="/la-gallerie" component={LaGallerie}/>
-            <Route path="/les-avis" component={LesAvis}/>
-          </div>
+        <div className="App">
+          <Route path="/back-office" component={BackOffice}/>
+          <Route path="/televiseur" component={Televiseur}/>
+          <Route path="/sandbox" component={SandBox}/>
         </div>
       </Router>
-    );
+    )
   }
 }
 

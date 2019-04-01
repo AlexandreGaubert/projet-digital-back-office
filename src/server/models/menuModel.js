@@ -15,6 +15,7 @@ var menuDaySchema = new Schema({
 var menuSchema = new Schema({
   from: String,
   to: String,
+  results: Array,
   lundi: menuDaySchema,
   mardi: menuDaySchema,
   mercredi: menuDaySchema,

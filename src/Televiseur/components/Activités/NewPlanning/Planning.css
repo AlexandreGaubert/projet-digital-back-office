@@ -1,0 +1,15 @@
+#Planning {
+
+}
+
+#PlanningContent {
+  width: 100vw;
+  height: -webkit-fill-available;
+  display: flex;
+  flex-direction: row;
+}
+
+.PlanningDay {
+  height: -webkit-fill-available;
+  border: 1px solid;
+}

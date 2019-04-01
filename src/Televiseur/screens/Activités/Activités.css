@@ -1,0 +1,20 @@
+.Hour {
+  font-size: 1.5em;
+  background: #34495e
+}
+
+.styles_day_title__1y-BE {
+  font-size: 1.5em
+}
+
+.Event {
+  font-size: 1em;
+}
+
+.Event > .Event-info:nth-child(1) {
+  font-weight: bold;
+}
+
+.Event-info {
+  color: white;
+}

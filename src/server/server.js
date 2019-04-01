@@ -1,15 +1,25 @@
 const axios = require("axios");
-const session = require('express-session');
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
+var express = require('express');
 var app = require('express')();
-var http = require('http').Server(app);
+var http = require('http').createServer(app);
 var io = require('socket.io')(http);
 var multer = require('multer')
 var fs = require('fs')
+var siofu = require("socketio-file-upload");
+var session = require("express-session")({
+  secret: "my-secret",
+  resave: true,
+  saveUninitialized: true
+})
+var sharedsession = require("express-socket.io-session");
 
 const port = 8080;
 
+app.use(express.static(__dirname + '/uploads'));
+app.use(session)
+app.use(siofu.router)
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
@@ -17,11 +27,12 @@ app.use(function(req, res, next) {
 });
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(session({secret: "shhhh"}))
+
+io.use(sharedsession(session))
 
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, '../pages/LaGallerie/images') //Destination folder
+    cb(null, './uploads') //Destination folder
   },
   filename: function (req, file, cb) {
     cb(null, file.originalname) //File name after saving
@@ -44,75 +55,79 @@ var Activity = require("./models/activityModel");
 var Menu = require("./models/menuModel");
 var Avis = require("./models/avisModel");
 var Gallery = require("./models/galleryModel");
-
-var someAvis = [
-  {
-    resident: "Mme Peltais",
-    messages: [
-      { from: 'resident', content: "J'ai trouvé l'animation d'aujourd'hui très bien faite j'ai passé un très bon moment"},
-      { from: 'foyer', content: "Nous vous remercions de votre avis très positif cela nous fait chaud au coeur"},
-      { from: 'resident', content: "Je vous en prie ça me fait plaisir !"}
-    ],
-    type: 'positive',
-    solved: false,
-    date: "2019-02-26"
-  },
-  {
-    resident: "Mme Gourhan",
-    messages: [
-      { from: 'resident', content: "Le repas de ce midi etait très mauvais, le poisson contenait des arretes j'ai failli m'étouffer !"},
-      { from: 'foyer', content: "Merci pour votre retour, nous ferons notre possible pour régler cette situation"}
-    ],
-    type: 'negative',
-    solved: false,
-    date: "2019-01-12"
-  },
-  {
-    resident: "Mr Frin",
-    messages: [
-      { from: 'resident', content: "Le sapin est incroyablement bien décoré !"},
-      { from: 'foyer', content: "Merci beaucoup Mr Frin, nous faisons en sorte qu'il soit le plus beau de toute la ville de Montfort"},
-      { from: 'resident', content: "Et bien c'est réussi cette année encore, bravo !"}
-    ],
-    type: 'positive',
-    solved: false,
-    date: "2018-11-10"
-  },
-]
-
-function populateAvis() {
-  var avis = 0;
-  someAvis.map((item, key) => {
-    avis = new Avis(item);
-
-    avis.save((err, avis) => {
-      if (err) console.log(err);
-      else console.log(avis);
-    })
-  })
-}
-
-// populateAvis()
+var Resident = require("./models/residentModel");
+var User = require("./models/userModel");
 
 var sess = Object();
 
 var endpointsData = [
-  {model: News, name: 'NEWS'},
+  {model: News, name: 'NEWS', create: createNews},
   {model: Menu, name: 'MENU'},
   {model: Activity, name: 'ACTIVITY', get: getActivity},
   {model: Avis, name: 'AVIS'},
   {model: Gallery, name: 'GALLERY', edit: editGallery},
+  {model: Resident, name: 'RESIDENT'},
+  {model: User, name: 'USER', get: getUsers},
 ]
 
 io.on('connection', function(socket) {
   console.log("connected");
+
+  //file uploader
+  var uploader = new siofu();
+  uploader.dir = './uploads'
+  uploader.listen(socket);
+
   endpointsData.map(data => {
     endpoints(socket, data)
+  })
+
+  socket.on('USER_LOGIN', (data) => {
+    User.findOne({username: data.username}, (err, user) => {
+      if (user === null)
+        socket.emit('USER_LOGIN_RESPONSE', {code: 500, error: "Nom d'utilisateur invalide"})
+      else if (user.password !== data.password)
+        socket.emit('USER_LOGIN_RESPONSE', {code: 500, error: "Mot de passe invalide"})
+      else if (user.password === data.password) {
+        socket.handshake.session.user = user;
+        socket.handshake.session.save();
+        socket.emit('USER_LOGIN_RESPONSE', {code: 200, error: null})
+      }
+    })
+
+  })
+
+  socket.on('AUTH_RESIDENT', data => {
+    console.log(data);
+    Resident.findOne({room: data.code}, (err, resident) => {
+      if (err != null) socket.emit('AUTH_RESIDENT_RESPONSE', {code: 500, error: err})
+      if (resident === null) socket.emit('AUTH_RESIDENT_RESPONSE', {code: 404, error: "not found"})
+      else if(resident != null) socket.emit('AUTH_RESIDENT_RESPONSE', {code: 200, resident: resident})
+
+    })
+  })
+
+  socket.on('GET_MENU_OF_WEEK', data => {
+    var curWeekMonday = new Date(data.monday);
+    curWeekMonday.setDate(curWeekMonday.getDate() + 8);
+    
+    Menu.findOne({from: curWeekMonday.toISOString().slice(0, 10)}, (err, menu) => {
+      if (err != null) socket.emit('GET_MENU_OF_WEEK_RESPONSE', {code: 500, error: err})
+      if (menu === null) socket.emit('GET_MENU_OF_WEEK_RESPONSE', {code: 404, error: "not found"})
+      else if (menu != null) socket.emit('GET_MENU_OF_WEEK_RESPONSE', {code: 200, menu: menu})
+    })
+  })
+
+  socket.on('USER_IS_AUTH', data => {
+    if (socket.handshake.session.user)
+      socket.emit('USER_IS_AUTH_RESPONSE', {isAuth: true, user: socket.handshake.session.user})
+    else
+      socket.emit('USER_IS_AUTH_RESPONSE', {isAuth: true, user: socket.handshake.session.user})
   })
 })
 
 app.post('/create-gallery', upload.array('photo'), (req, res) => {
-    var newGallery = new Gallery({name: req.body.name});
+    var newGallery = new Gallery({name: req.body.name, images: []});
 
     if (req.files) {
       req.files.forEach(file => {
@@ -155,6 +170,22 @@ function getActivity(socket) {
   })
 }
 
+function getUsers(socket) {
+  socket.on('GET_USER', data => {
+    var result = []
+
+    User.find({}, (err, users) => {
+      if (err) console.log(err);
+      else {
+        result = users.map(user => {
+          return {...user._doc, password: null}
+        })
+        socket.emit('GET_USER_RESPONSE', {code: 200, data: result})
+      }
+    })
+  })
+}
+
 function editGallery(socket) {
   socket.on('EDIT_GALLERY', data => {
     Gallery.updateOne({_id: data.update._id}, data.update, (err, document) => {
@@ -173,6 +204,20 @@ function editGallery(socket) {
       }
     })
   })
+}
+
+function createNews(socket) {
+  socket.on('CREATE_NEWS', data => {
+      var nw = new News(data);
+
+      nw.save((err, saved) => {
+        if (err) {
+          socket.emit(`CREATE_NEWS_RESPONSE`, {code: 500, error: err})
+          return;
+        }
+        socket.emit(`CREATE_NEWS_RESPONSE`, {code: 200, data: saved});
+      })
+    })
 }
 
 function endpoints(socket, infos) {
@@ -219,7 +264,7 @@ function endpoints(socket, infos) {
       if (err)
         socket.emit(`DELETE_${infos.name}_RESPONSE`, {code: 500, error: err})
       else
-        socket.emit(`DELETE_${infos.name}_RESPONSE`, {code: 200})
+        socket.emit(`DELETE_${infos.name}_RESPONSE`, {code: 200, deletedID: data})
     })
   })
 
