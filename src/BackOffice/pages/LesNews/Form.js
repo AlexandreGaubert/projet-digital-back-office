@@ -4,7 +4,6 @@ import SocketIOFileUpload from 'socketio-file-upload';
 import Button from '../../components/reusable/Button'
 import SelectColor from '../../components/SelectColor'
 import {store} from '../../../redux/store'
-import {createNews} from '../../../redux/actions/newActions'
 
 export default class Form extends Component {
   static defaultProps = {
@@ -67,7 +66,7 @@ export default class Form extends Component {
           style={{...styles.input, margin: 0}}
         />
         <textarea
-          value={this.state.body}
+          value={body}
           name="body"
           onChange={this.onChange}
           style={{...styles.input, height: '20vh', width: '40vw'}}
@@ -75,13 +74,13 @@ export default class Form extends Component {
         <input
           type="file"
           id="news-file-input"
-          value={this.state.image}
+          value={image}
           name="image"
           onChange={this.onChange}
           style={{...styles.input}}
         />
         <input
-          value={this.state.date}
+          value={date}
           name="date"
           onChange={this.onChange}
           style={{...styles.input, marginTop: 0}}

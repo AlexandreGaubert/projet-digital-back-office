@@ -7,6 +7,7 @@ import { avis } from './reducers/avisReducer'
 import { galleries } from './reducers/galleryReducer'
 import { residents } from './reducers/residentReducer'
 import { users } from './reducers/userReducer'
+import { employees } from './reducers/employeeReducer'
 
-const mainReducer = combineReducers({users, news, activities, menus, avis, galleries, residents})
+const mainReducer = combineReducers({users, news, activities, menus, avis, galleries, residents, employees})
 export const store = createStore(mainReducer)

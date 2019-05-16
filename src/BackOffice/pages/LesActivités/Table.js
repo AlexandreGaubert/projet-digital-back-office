@@ -3,8 +3,6 @@ import React, { Component } from "react"
 import Navigator from './Navigator';
 import Row from './Row';
 
-const days = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
-
 export default class Table extends Component {
   render() {
     const { animations, openModal } = this.props;

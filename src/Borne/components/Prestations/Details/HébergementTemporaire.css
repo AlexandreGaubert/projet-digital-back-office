@@ -1,0 +1,28 @@
+.HébergementTemporaire {
+  padding: 1em
+}
+
+.HébergementTemporaire-description {
+	position: relative;
+	background: #00aabb;
+	border-radius: .4em;
+  padding: 1em;
+  color: white;
+  font-size: 30px;
+  text-align: justify;
+  margin-top: 40px;
+}
+
+.HébergementTemporaire-description::after {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 50%;
+	width: 0;
+	height: 0;
+	border: 40px solid transparent;
+	border-bottom-color: #00aabb;
+	border-top: 0;
+	margin-left: -40px;
+	margin-top: -40px;
+}

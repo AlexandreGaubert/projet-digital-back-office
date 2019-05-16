@@ -6,7 +6,6 @@ import Diaporama from './Diaporama';
 import Modal from '../../components/Modal'
 import Button from '../../components/reusable/Button'
 import DeletePopup from '../../components/DeletePopup'
-import { withCRUDLModal } from '../../hoc/withCRUDLModal'
 import { store } from '../../../redux/store'
 
 class Gallerie extends Component {
@@ -62,7 +61,7 @@ class Gallerie extends Component {
     Object.assign(data, this.props.data);
 
     imgsToDelete.map((img, key) => {
-      data.images.splice(data.images.indexOf(img), 1)
+      return data.images.splice(data.images.indexOf(img), 1)
     })
 
     store.dispatch({type: 'EDIT_GALLERY', data: {update: data, deletedImages: imgsToDelete}})
@@ -77,7 +76,7 @@ class Gallerie extends Component {
     clearTimeout(this.mouseTimer)
   }
   render() {
-    const { openModal, goBack, data } = this.props;
+    const { goBack, data } = this.props;
     const { deleteMode } = this.state;
 
     return(
@@ -121,24 +120,14 @@ class Gallerie extends Component {
 }
 
 const Miniature = props => {
-  const { deleteMode, selectedForDeletion, onClick, style, src, onMouseDown, onMouseUp } = props;
+  const { deleteMode, selectedForDeletion, onClick, src, onMouseDown, onMouseUp } = props;
   return (
     <div onMouseDown={onMouseDown} onMouseUp={onMouseUp} onClick={onClick} style={styles.miniature} className={"gallerie-image"}>
       <img
-        height="100%"
-        width="100%"
+        style={{maxWidth: '100%', maxHeight: '100%', opacity: deleteMode && !selectedForDeletion ? .5 : 1}}
         src={src}
+        alt="image"
       />
-
-      {deleteMode && <i style={{
-        position: 'absolute',
-        top: 0,
-        bottom: 0,
-        right: 0,
-        left: 0,
-        backgroundColor: selectedForDeletion ? 'transparent' : 'rgb(255, 255, 255, .5)',
-        zIndex: 10
-      }}/>}
 
       {deleteMode && <span style={{
           position: 'absolute',
@@ -146,8 +135,8 @@ const Miniature = props => {
           right: 0,
           margin: '1em',
           zIndex: 1000,
-          height: '1em',
-          width: '1em',
+          height: '1.5em',
+          width: '1.5em',
           border: '1px solid',
           backgroundColor: 'white',
           borderRadius: '5px',
@@ -184,7 +173,7 @@ const styles = {
     marginTop: '.5em',
     fontSize: '2vw',
     backgroundColor: '#2f383d',
-    padding: '.5em',
+    padding: '1em',
     borderRadius: '100%',
     width: '2vw',
     height: '2vw',

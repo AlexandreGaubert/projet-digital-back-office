@@ -1,9 +1,5 @@
 import React, { Component } from "react"
 
-import Button from '../../components/reusable/Button'
-import { store } from '../../../redux/store'
-import { axios } from 'axios'
-
 export default class Form extends Component {
   static defaultProps = {
 
@@ -32,9 +28,9 @@ export default class Form extends Component {
     this.setState({imagesName: e.target.value, files: e.target.files});
   }
   render() {
-    const { name, imagesName, files } = this.state;
-    console.log(files);
+    const { files } = this.state;
     const { type } = this.props;
+
     return(
       <div style={styles.container}>
         <h1 style={styles.title}><i className={"fas fa-" + (type === 'edit' ? "pencil-alt" : "plus")}/>

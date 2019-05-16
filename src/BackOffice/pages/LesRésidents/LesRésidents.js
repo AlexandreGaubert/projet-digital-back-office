@@ -39,17 +39,19 @@ export default class LesRésidents extends Component {
   }
   handleNameInputChange(e) {
     const name = e.target.value;
-    var sorted = new Array();
+    var sorted = [];
 
     this.state.residents.map(resident => {
       if (resident.lastname.toUpperCase().indexOf(name.toUpperCase()) >= 0 || resident.lastname.toLowerCase().indexOf(name.toLowerCase()) >= 0 )
-        sorted.push(resident)
+        return sorted.push(resident)
 
       if (resident.firstname.toUpperCase().indexOf(name.toUpperCase()) >= 0 || resident.firstname.toLowerCase().indexOf(name.toLowerCase()) >= 0 )
-        sorted.push(resident)
+        return sorted.push(resident)
 
       if (resident.room.indexOf(name) >= 0)
-        sorted.push(resident)
+        return sorted.push(resident)
+
+      return 0;
     })
 
     this.setState({nameInput: e.target.value, sortedResidentsList: sorted});

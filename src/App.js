@@ -4,6 +4,7 @@ import openSocket from 'socket.io-client';
 
 import BackOffice from './BackOffice/BackOffice'
 import Televiseur from './Televiseur/Televiseur'
+import Borne from './Borne/Borne'
 import SandBox from './SandBox'
 import { store } from './redux/store'
 import './App.css';
@@ -24,6 +25,7 @@ class App extends Component {
         <div className="App">
           <Route path="/back-office" component={BackOffice}/>
           <Route path="/televiseur" component={Televiseur}/>
+          <Route path="/borne" component={Borne}/>
           <Route path="/sandbox" component={SandBox}/>
         </div>
       </Router>

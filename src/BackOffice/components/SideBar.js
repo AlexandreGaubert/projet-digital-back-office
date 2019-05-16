@@ -1,7 +1,7 @@
 import React, { Component } from "react"
-import { Link } from 'react-router-dom'
+import { Link, withRouter } from 'react-router-dom'
 
-export default class SideBar extends Component {
+class SideBar extends Component {
   static defaultProps = {
 
   }
@@ -13,18 +13,21 @@ export default class SideBar extends Component {
 
   }
   render() {
+    const currentPage = this.props.location.pathname;
+
     return(
       <div style={styles.container}>
         <ul style={styles.list}>
 
           <span style={styles.label}>TÉLÉVISEUR</span>
-          <Item name="Les Menus" icon="fas fa-utensils" path="/back-office/les-menus"/>
-          <Item name="Les Activités" icon="fas fa-calendar" path="/back-office/les-activités"/>
-          <Item name="Les Nouvelles" icon="fas fa-info-circle" path="/back-office/les-news"/>
-          <Item name="La Galerie" icon="fas fa-images" path="/back-office/la-gallerie"/>
-          <Item name="Les Avis" icon="fas fa-pencil-alt" path="/back-office/les-avis"/>
+          <Item name="Les Menus" icon="fas fa-utensils" path="/back-office/les-menus" currentPage={currentPage}/>
+          <Item name="Les Activités" icon="fas fa-calendar" path="/back-office/les-activités" currentPage={currentPage}/>
+          <Item name="Les Nouvelles" icon="fas fa-info-circle" path="/back-office/les-news" currentPage={currentPage}/>
+          <Item name="La Galerie" icon="fas fa-images" path="/back-office/la-gallerie" currentPage={currentPage}/>
+          <Item name="Les Avis" icon="fas fa-pencil-alt" path="/back-office/les-avis" currentPage={currentPage}/>
           <span style={styles.label}>AUTRES</span>
-          <Item name="Les Résidents" icon="fas fa-user" path="/back-office/les-residents"/>
+          <Item name="Les Résidents" icon="fas fa-user" path="/back-office/les-residents" currentPage={currentPage}/>
+          <Item name="Le Personnel" icon="fas fa-users" path="/back-office/le-personnel" currentPage={currentPage}/>
         </ul>
       </div>
     )
@@ -44,16 +47,18 @@ class Item extends Component {
   render() {
     const { name, icon, path } = this.props;
     const { hover } = this.state;
+    const selected = this.props.currentPage === path;
+
     return (
       <li
         onMouseEnter={this.onMouseEnter.bind(this)}
         onMouseLeave={this.onMouseLeave.bind(this)}
         style={{
           ...styles.item,
-          backgroundColor: hover ? '#2f383d' : 'inherit'
+          backgroundColor: hover || selected ? '#2f383d' : 'inherit'
         }}
       >
-        {hover ? <i style={styles.itemLine}/> : null}
+        {hover || selected ? <i style={styles.itemLine}/> : null}
         <Link to={path ? path : '/'} style={styles.itemLink}>
           <span style={styles.itemIcon}><i className={icon}/></span>
           {name}
@@ -119,3 +124,5 @@ const styles = {
     width: '1.2em',
   }
 }
+
+export default withRouter(SideBar)

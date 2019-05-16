@@ -1,5 +1,4 @@
 export function APICall(name, socket, data = null) {
-  console.log(data);
   return new Promise((resolve, reject) => {
     socket.emit(name, data);
     socket.on(name + "_RESPONSE", (response) => {

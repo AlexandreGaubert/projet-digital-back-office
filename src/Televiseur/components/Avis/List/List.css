@@ -1,0 +1,35 @@
+#AvisList {
+  padding: 2em;
+}
+
+.AvisList-item {
+  display: flex;
+  font-size: 2vw;
+  color: white;
+  background: #6666FF;
+  padding: .5em;
+  align-items: center;
+  border-radius: 10px;
+  box-shadow: 0 0 10px 5px #ccc;
+  margin: 1em 0;
+}
+
+.AvisList-item > p {
+  margin: 0 auto;
+}
+
+.AvisList-item i {
+  float: left;
+  border-radius: 45px;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-around;
+  box-shadow: 0 0 5px black;
+  padding: .5em;
+}
+
+.AvisList-item i > p {
+  margin: 0;
+  margin-left: .5em;
+  font-family: Montserrat;
+}

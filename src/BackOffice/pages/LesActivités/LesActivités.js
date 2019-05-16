@@ -4,7 +4,6 @@ import EventForm from './EventForm'
 import Table from './Table'
 import Modal from '../../components/Modal'
 import DeletePopup from '../../components/DeletePopup'
-import Button from '../../components/reusable/Button'
 import { store } from '../../../redux/store'
 
 export default class LesActivités extends Component {

@@ -1,0 +1,38 @@
+.Slider {
+  box-sizing: border-box;
+  width: 100%;
+  margin: 0 auto;
+  position: relative;
+}
+
+.Slider-image {
+}
+
+.slider-arrow {
+  font-size: 3vw;
+  position: absolute;
+  z-index: 100000;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background: transparent;
+  transition: all .2s linear;
+  padding: 0 .5em;
+}
+
+.slider-arrow:hover {
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+}
+
+.slider-arrow.arrow-next {
+  right: 0;
+}
+
+.slider-arrow.arrow-prev {
+  left: 0;
+}

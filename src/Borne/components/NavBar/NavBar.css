@@ -1,0 +1,26 @@
+* {
+  box-sizing: border-box;
+}
+
+#NavBar {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  font-size: 8vw;
+  align-items: center;
+  height: 12vh;
+  width: 100%;
+  padding: .5em;
+  color: white;
+}
+
+#NavBar > i {
+  font-size: 10vw;
+}
+
+.NavBar-home-icon {
+  text-decoration: none;
+  color: inherit;
+  font-size: 10vw;
+  
+}

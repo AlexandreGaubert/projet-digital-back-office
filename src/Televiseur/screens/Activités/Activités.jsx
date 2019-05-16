@@ -24,7 +24,9 @@ var initialEvents = {
   Mardi: [],
   Mercredi: [],
   Jeudi: [],
-  Vendredi: []
+  Vendredi: [],
+  Samedi: [],
+  Dimanche: [],
 }
 
 class ScreensActivités extends React.Component {
@@ -55,7 +57,7 @@ class ScreensActivités extends React.Component {
   }
   render () {
     const TimeTableProps = {
-      hoursInterval: [ 10, 18 ],
+      hoursInterval: [ 10, 19 ],
       timeLabel: '',
       renderHour(hour, defaultAttributes, styles) {
         return (
@@ -78,7 +80,7 @@ class ScreensActivités extends React.Component {
       // getDayLabel: (day) => upperCase(day)
     }
     return (
-      <div>
+      <div id="Timetable-container">
         <Timetable
           {...TimeTableProps}
           events={this.state.events}

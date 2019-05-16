@@ -1,5 +1,7 @@
 import React, { Component } from "react"
-import Slider from 'react-slick'
+
+import Slider from '../Slider/Slider'
+
 
 export default class Diaporama extends Component {
   static defaultProps = {
@@ -44,60 +46,24 @@ export default class Diaporama extends Component {
     const curImg = images[index]
     return(
       <div onKeyPress={(e) => this.onKeyPress(e)} style={styles.container}>
-        <PrevArrow onClick={this.prevImage}/>
-        <img style={styles.image} src={ "http://localhost:8080/" + curImg}/>
-        <NextArrow onClick={this.nextImage}/>
-        <i style={styles.overlay} onClick={this.onClose}/>
+        <Slider images={images} style={{maxWidth: '80%', maxHeight: '80%', zIndex: 10000}}/>
+        <span onClick={onClose} style={styles.overlay}/>
       </div>
     )
   }
 }
 
-function NextArrow(props) {
-  const { onClick } = props;
-  return (
-    <div
-      onClick={onClick}
-      style={{...styles.arrow, right: '-35px'}}
-    >
-      <i style={{margin: 'auto'}} className={"fas fa-chevron-right"}/>
-    </div>
-  );
-}
-
-function PrevArrow(props) {
-  const { onClick } = props;
-  return (
-    <div
-      onClick={onClick}
-      style={{...styles.arrow, left: '-35px'}}
-    >
-      <i style={{margin: 'auto'}} className={"fas fa-chevron-left"}/>
-    </div>
-  );
-}
-
 const styles = {
   container: {
-    display: 'flex',
     position: 'fixed',
     width: '100%',
-    height: '100%',
     top: 0,
+    right: 0,
+    bottom: 0,
     left: 0,
-    color: 'white',
-    overflow: 'hidden',
-  },
-  image: {
-    maxHeight: '90vh',
-    maxWidth: '90vw',
-    zIndex: '1000',
-    margin: 'auto'
-  },
-  arrow: {
     display: 'flex',
-    zIndex: '1000',
-    fontSize: '4vw',
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   overlay: {
     position: 'absolute',

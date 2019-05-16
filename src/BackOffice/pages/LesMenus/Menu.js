@@ -58,7 +58,6 @@ const styles = {
     position: 'relative'
   },
   buttonGroup: {
-    marginLeft: 'auto',
     position: 'absolute',
     top: 0,
     left: 0,

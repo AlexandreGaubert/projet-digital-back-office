@@ -1,7 +1,5 @@
 import React, { Component } from "react"
 
-import Button from '../../components/reusable/Button'
-
 export default class FormAddImage extends Component {
   static defaultProps = {
 

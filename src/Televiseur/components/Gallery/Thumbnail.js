@@ -28,7 +28,9 @@ class Gallerie extends Component {
     const { hover, name, id, openGallery, image } = this.props;
     return(
       <div className="thumbnail" {...this.props} onClick={() => openGallery(id)} style={styles.thumbnail}>
-        {image === null ? <img src={"http://localhost:8080/default-thumbnail.png"} style={{width: '50%', margin: 'auto'}}/> : <img style={styles.thumbnailImage} src={"http://localhost:8080/" + image}/>}
+        <span className="image-group">
+          {image === null ? <img src={"http://localhost:8080/default-thumbnail.png"} /> : <img style={styles.thumbnailImage} src={"http://localhost:8080/" + image}/>}
+        </span>
         <span style={{...styles.overlay, backgroundColor: hover ? 'rgb(0,0,0,.75)' : 'rgb(0,0,0,.50)'}}>
           <p style={{padding: '1em'}}>{name.toUpperCase()}</p>
         </span>

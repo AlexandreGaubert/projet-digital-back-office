@@ -67,7 +67,7 @@ export default class EventForm extends Component {
             <option>Invités</option>
           </select>
           <input
-            value={this.state.date}
+            value={date}
             name="date"
             onChange={this.onChange}
             style={{...styles.input, width: '45%'}}

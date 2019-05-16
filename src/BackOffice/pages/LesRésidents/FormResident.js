@@ -1,4 +1,5 @@
 import React, { Component } from "react"
+import SocketIOFileUpload from 'socketio-file-upload';
 
 import Button from '../../components/reusable/Button'
 import {store} from '../../../redux/store'
@@ -28,6 +29,10 @@ export default class FormResident extends Component {
     this.submit = this.submit.bind(this);
   }
   onChange(e) {
+    if (e.target.name === "photo") {
+      this.setState({photo: e.target.files[0].name});
+      return ;
+    }
     this.setState({[e.target.name]: e.target.value});
   }
   submit() {
@@ -37,8 +42,12 @@ export default class FormResident extends Component {
       store.dispatch({type: 'EDIT_RESIDENT', data: this.state})
     this.props.onClose()
   }
+  componentDidMount() {
+    var uploader = new SocketIOFileUpload(this.socket);
+    uploader.listenOnSubmit(document.getElementById("employee_form_submit"), document.getElementById("employee_form_file_input"));
+  }
   render() {
-    const { lastname, firstname, room, photo, gender } = this.state;
+    const { lastname, firstname, room, gender } = this.state;
     const { type } = this.props;
 
     return(
@@ -73,13 +82,13 @@ export default class FormResident extends Component {
           style={styles.input}
         />
         <input
-          type='file'
-          value={photo}
+          type="file"
           name="photo"
           onChange={this.onChange}
           style={styles.input}
+          id="employee_form_file_input"
         />
-        <Button action={this.submit} text={type === 'create' ? "AJOUTER" : (type === 'edit' ? "EDITER" : null)} style={styles.button}/>
+        <Button action={this.submit} id="employee_form_submit" text={type === 'create' ? "AJOUTER" : (type === 'edit' ? "EDITER" : null)} style={styles.button}/>
       </div>
     )
   }

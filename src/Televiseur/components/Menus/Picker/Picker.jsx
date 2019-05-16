@@ -34,15 +34,29 @@ class MenusPicker extends React.Component {
       return {results, currentDay, selectedPlatIndex: null}
     });
   }
+  cancelPreviousDay() {
+    this.setState(prevstate => {
+      var results = prevstate.results;
+      if (prevstate.currentDay.getDay() === 1) return;
+
+      var previousDay = new Date(prevstate.currentDay);
+      previousDay.setDate(prevstate.currentDay.getDate() - 1)
+      if (previousDay.getDay() === 5) this.submitResults(results)
+
+      results.pop(); //remove last element
+
+      return {results, currentDay: previousDay, selectedPlatIndex: null}
+    });
+  }
   render() {
     const { currentDay } = this.state;
-
+    console.log(this.state.results);
     if (currentDay.getDay() > 5) return this.renderFinish()
     else return this.renderPicker()
   }
   renderFinish() {
     return(
-      <MenusFinish resident={this.props.resident}/>
+      <MenusFinish text={"Votre choix de menu a été enregistré, merci."} resident={this.props.resident}/>
     )
   }
   renderPicker () {
@@ -63,7 +77,7 @@ class MenusPicker extends React.Component {
         </div>
 
         <div className="button-group">
-          <Button text="Revenir en arrière" icon="fas fa-undo" bgColor="#ff914d"/>
+          <Button action={this.cancelPreviousDay.bind(this)} text="Revenir en arrière" icon="fas fa-undo" bgColor="#ff914d"/>
           <Button bgColor="#7ed957" text="Jour Suivant" icon="fas fa-check" action={this.validateDayChoice.bind(this)}/>
         </div>
 

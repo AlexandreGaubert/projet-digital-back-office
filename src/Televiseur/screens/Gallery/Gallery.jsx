@@ -2,6 +2,7 @@ import React, { Component } from "react"
 
 import Gallerie from '../../components/Gallery/Gallery'
 import Thumbnail from '../../components/Gallery/Thumbnail'
+import ScreenTitle from '../../components/reusable/ScreenTitle'
 import { store } from '../../../redux/store'
 
 class ScreensGallery extends Component {
@@ -31,9 +32,9 @@ class ScreensGallery extends Component {
   }
   render() {
     const { galleries, gallery } = this.state;
-    console.log(galleries);
     return(
       <div style={styles.container}>
+        <ScreenTitle bgColor="#9975ba" icon="camera-retro" title="la galerie des évènements"/>
         {gallery === null ?
           <div style={{display: 'flex', flexDirection: 'column'}}>
             <List galleries={galleries} openGallery={this.openGallery.bind(this)}/>
@@ -75,7 +76,6 @@ const styles = {
   list: {
     display: 'flex',
     flexWrap: 'wrap',
-    marginTop: '2.5em'
   },
   listSlot: {
     width: '33.33333333333333%',

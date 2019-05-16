@@ -34,7 +34,7 @@ class Resident extends Component {
     const { hover } = this.state;
     return (
       <div onMouseEnter={this.hoverIn.bind(this)} onMouseLeave={this.hoverOut.bind(this)} style={styles.listItem}>
-        <img style={styles.residentPhoto} src={require('./user.png')}/>
+        <img alt={`photo de ${data.gender} ${data.firstname} ${data.lastname}`} style={styles.residentPhoto} src={data.photo.length > 0 ? `http://localhost:8080/${data.photo}` : require('./user.png')}/>
         <p style={{fontWeight: 'bold', margin: '.3em 0'}}>{`${data.gender}. ${data.firstname} ${data.lastname.toUpperCase()}`}</p>
         <p style={{fontWeight: 'bold', margin: '.3em 0'}}>{`Chambre n°${data.room}`}</p>
         {!hover ? null :

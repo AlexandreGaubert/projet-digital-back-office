@@ -10,71 +10,21 @@ class Gallerie extends Component {
     galleryOpen: false,
     addOpen: false,
     diapoOpen: false,
-    deleteMode: false,
-    imgsToDelete: []
   }
   constructor(props) {
     super(props)
 
-    this.openAdd = this.openAdd.bind(this);
-    this.openDelete = this.openDelete.bind(this);
-    this.openDelete = this.openDelete.bind(this);
     this.openDiapo = this.openDiapo.bind(this);
     this.closeModal = this.closeModal.bind(this);
-    this.toggleDeleteMode = this.toggleDeleteMode.bind(this);
-    this.selectForDeletion = this.selectForDeletion.bind(this);
-    this.deleteSelection = this.deleteSelection.bind(this);
-    this.onMouseUp = this.onMouseUp.bind(this);
-    this.onMouseDown = this.onMouseDown.bind(this);
-  }
-  openAdd() {
-    this.setState({addOpen: true});
-  }
-  openDelete() {
-    this.setState({deleteOpen: true});
   }
   openDiapo(index = 0) {
     this.setState({diapoOpen: true, index: index});
   }
   closeModal() {
-    this.setState({addOpen:false, diapoOpen: false, deleteOpen: false});
-  }
-  toggleDeleteMode() {
-    this.setState({deleteMode: true});
-  }
-  selectForDeletion(image) {
-    var imgsToDelete = this.state.imgsToDelete;
-
-    if (imgsToDelete.indexOf(image) > -1)
-      imgsToDelete.splice(imgsToDelete.indexOf(image), 1);
-    else
-      imgsToDelete.push(image);
-
-    this.setState({imgsToDelete: imgsToDelete});
-  }
-  deleteSelection() {
-    const {imgsToDelete} = this.state
-    var data = {};
-    Object.assign(data, this.props.data);
-
-    imgsToDelete.map((img, key) => {
-      data.images.splice(data.images.indexOf(img), 1)
-    })
-
-    store.dispatch({type: 'EDIT_GALLERY', data: {update: data, deletedImages: imgsToDelete}})
-    this.setState({imgsToDelete: [], deleteMode: false});
-  }
-  onMouseDown(e) {
-    e.preventDefault()
-    e.stopPropagation()
-    this.mouseTimer = setTimeout(() => this.toggleDeleteMode(), 500)
-  }
-  onMouseUp() {
-    clearTimeout(this.mouseTimer)
+    this.setState({diapoOpen: false});
   }
   render() {
-    const { openModal, goBack, data } = this.props;
-    const { deleteMode } = this.state;
+    const { goBack, data } = this.props;
 
     return(
       <div style={styles.gallery}>
@@ -88,8 +38,6 @@ class Gallerie extends Component {
           {data.images.map((img, key) => {
             return (
               <Miniature
-                onMouseUp={this.onMouseUp}
-                onMouseDown={this.onMouseDown}
                 onClick={() => this.openDiapo(key)}
                 className={"gallerie-image"}
                 src={"http://localhost:8080/" + img}
@@ -105,13 +53,14 @@ class Gallerie extends Component {
 }
 
 const Miniature = props => {
-  const { onClick, style, src, onMouseDown, onMouseUp } = props;
+  const { onClick, src } = props;
   return (
-    <div onMouseDown={onMouseDown} onMouseUp={onMouseUp} onClick={onClick} style={styles.miniature} className={"gallerie-image"}>
+    <div onClick={onClick} style={styles.miniature} className={"gallerie-image"}>
       <img
         height="100%"
         width="100%"
         src={src}
+        alt="gallery"
       />
     </div>
   )
@@ -121,6 +70,7 @@ const styles = {
   gallery: {
     width: '100%',
     height: '100%',
+    position: 'relative'
   },
   header: {
     display: 'flex',

@@ -1,9 +1,12 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import MenusAuth from "../../components/Menus/Auth/Auth"
+import Auth from '../../components/reusable/Auth/Auth'
 import MenusPicker from "../../components/Menus/Picker/Picker"
+import MenusFinish from "../../components/Menus/Finish/Finish"
+import ScreenTitle from "../../components/reusable/ScreenTitle"
 import { APICall } from '../../../redux/APICall'
+
 class ScreensMenu extends React.Component {
   state = {
     isAuth: false,
@@ -16,15 +19,18 @@ class ScreensMenu extends React.Component {
       this.setState({menu: res.menu, isAuth: true, resident});
     })
     .catch(res => {
-
+      if (res.code === 404) this.setState({menu: null, isAuth: true, resident});
     })
   }
   render () {
     const { isAuth, resident, menu } = this.state;
+    console.log(menu);
     return (
       <div>
-        {!isAuth && <MenusAuth validateAuth={this.validateAuth.bind(this)}/>}
-        {isAuth && <MenusPicker menu={menu} resident={resident}/>}
+        <ScreenTitle title="je choisis mon menu" icon="utensils" bgColor="#f49b49"/>
+        {!isAuth && <Auth validateAuth={this.validateAuth.bind(this)}/>}
+        {(isAuth && menu != null) && <MenusPicker menu={menu} resident={resident}/>}
+        {(isAuth && menu === null) && <MenusFinish text={"Aucun menu n'a été trouvé, merci de réessayer plus tard"}/>}
       </div>
     )
   }

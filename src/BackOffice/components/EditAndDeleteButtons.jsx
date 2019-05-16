@@ -20,9 +20,8 @@ export default class EditAndDeleteButtons extends Component {
 const styles = {
   buttonGroup: {
     position: 'absolute',
-    top: 0,
+    top: '.5em',
     right: '.5em',
-    bottom: 0,
     display: 'flex',
     alignItems: 'center',
     margin: 'auto 0'

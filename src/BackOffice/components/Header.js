@@ -1,6 +1,8 @@
 import React, { Component } from "react"
+import axios from 'axios'
+import { withRouter } from 'react-router-dom'
 
-export default class Header extends Component {
+class Header extends Component {
   static defaultProps = {
 
   }
@@ -14,7 +16,7 @@ export default class Header extends Component {
   render() {
     return(
       <div style={styles.container}>
-        <Profile/>
+        <Profile user={this.props.user} history={this.props.history}/>
       </div>
     )
   }
@@ -25,26 +27,32 @@ class Profile extends Component {
     menuOpen: false
   }
   openMenu() {
-    console.log("closing");
-
     this.setState({menuOpen: true});
   }
   closeMenu() {
-    console.log("closing");
     this.setState({menuOpen: false});
+  }
+  logout() {
+    axios.get('http://localhost:8080/logout')
+    .then(res => {
+      document.location.reload()
+    })
   }
   render() {
     const { menuOpen } = this.state;
-    console.log(menuOpen);
+    const { user } = this.props;
+
     return (
       <div style={{display: 'flex', width: '100%'}}>
         <span onClick={this.openMenu.bind(this)} style={styles.profile}>
-          {"Alexandre Gaubert"}
-          <img style={styles.picture} src={require('../assets/images/profile.png')}/>
+          {user.username}
+          <img style={styles.picture} src={user.photo.length > 0 ? `http://localhost:8080/${user.photo}` : require('../assets/images/user.png')}/>
 
-          <ul hidden={!menuOpen} style={styles.menu}>
+
+          <ul onClick={this.closeMenu.bind(this)} hidden={!menuOpen} style={styles.menu}>
             <Item name="Mon Compte" icon="fas fa-cog"/>
-            <Item name="Déconnexion" icon="fas fa-sign-out-alt"/>
+            {user.isAdmin && <Item action={() => this.props.history.push('/back-office/users')} name="Gérer les accès" icon="fas fa-lock"/>}
+            <Item name="Déconnexion" action={this.logout} icon="fas fa-sign-out-alt"/>
           </ul>
         </span>
         <span hidden={!menuOpen} onClick={this.closeMenu.bind(this)} style={styles.menuOverlay}/>
@@ -64,12 +72,13 @@ class Item extends Component {
     this.setState({hover: false});
   }
   render() {
-    const { name, icon } = this.props;
+    const { name, icon, action } = this.props;
     const { hover } = this.state;
     return (
       <li
         onMouseOver={this.onMouseOver.bind(this)}
         onMouseLeave={this.onMouseLeave.bind(this)}
+        onClick={action}
         style={{
           ...styles.menuItem,
           backgroundColor: hover ? '#2f383d' : 'inherit'
@@ -104,8 +113,9 @@ const styles = {
     cursor: 'pointer'
   },
   picture: {
-    height: '10vh',
-    borderRadius: '45em',
+    height: '8.5vh',
+    width: '8.5vh',
+    borderRadius: '100%',
     margin: '.5em',
     boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.75)',
   },
@@ -147,3 +157,5 @@ const styles = {
     opacity: '.5'
   }
 }
+
+export default withRouter(Header)

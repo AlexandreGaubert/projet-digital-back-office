@@ -1,0 +1,23 @@
+.NavButton {
+  display: flex;
+  flex-direction: row;
+  align-items:  center;
+  border-radius: 10px;
+  box-shadow: 15px 15px 10px rgb(0,0,0,.3);
+  font-size: 5vh;
+  height: 15vh;
+  color: white;
+  text-decoration: none;
+}
+
+.NavButton:nth-of-type(2) {
+  justify-content: center !important;
+}
+
+.NavButton-title {
+}
+
+.NavButton-icon {
+  font-size: 8vh;
+  margin: 0 .3em;
+}

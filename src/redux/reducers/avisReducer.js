@@ -23,6 +23,20 @@ export function avis(state = initialState, action) {
     case "GET_AVIS_ERROR":
       return state;
 
+    case "GET_AVIS_OF_RESIDENT":
+      APICall('GET_AVIS_OF_RESIDENT', document.socket, action.data)
+      .then((res) => {
+        return store.dispatch({type: "GET_AVIS_OF_RESIDENT_SUCCESS", data: res.avis})
+      })
+      .catch((err) => {
+        return store.dispatch({type: "GET_AVIS_OF_RESIDENT_ERROR"})
+      })
+      break;
+    case "GET_AVIS_OF_RESIDENT_SUCCESS":
+      return {...state, avis: action.data}
+    case "GET_AVIS_OF_RESIDENT_ERROR":
+      return state;
+
     case "CREATE_AVIS":
       APICall('CREATE_AVIS', document.socket, action.data)
       .then((res) => {

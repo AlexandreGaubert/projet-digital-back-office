@@ -1,0 +1,29 @@
+#ScreensTrouverResident {
+}
+
+.autocomplete-container {
+  margin: 1em;
+  background: #5ce1e6;
+}
+
+#AutocompleteInput {
+}
+
+.link {
+  text-decoration: none;
+  display: flex;
+  padding: .5em;
+  background: #0cce6b;
+  color: white;
+  font-size: 8vw;
+  align-items: center;
+  width: -webkit-fit-content;
+  justify-content: center;
+  margin: 1em auto;
+  border-radius: 20px;
+  -webkit-box-shadow: 5px 5px 10px rgb(0,0,0,.5)
+}
+
+.link > i {
+  margin-right: .5em;
+}

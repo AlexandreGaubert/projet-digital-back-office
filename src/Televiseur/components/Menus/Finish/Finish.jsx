@@ -8,7 +8,7 @@ class MenusFinish extends React.Component {
   render () {
     return (
       <div className="Finish-container">
-        <h1>Votre choix de menu a été enregistré, merci.</h1>
+        <h1>{this.props.text}</h1>
         <Button text="RETOURNER A L'ACCUEIL" icon="fas fa-home" bgColor="#7ed957"/>
       </div>
     )

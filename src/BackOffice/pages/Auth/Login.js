@@ -1,9 +1,12 @@
 import React, { Component } from "react"
+import axios from 'axios'
+import { withRouter } from 'react-router-dom'
 
 import Button from '../../components/reusable/Button'
 import { store } from '../../../redux/store'
+axios.defaults.withCredentials = true;
 
-export default class Login extends Component {
+class Login extends Component {
   static defaultProps = {
 
   }
@@ -15,12 +18,19 @@ export default class Login extends Component {
     loginError: null
   }
   onInputChange(e) {
-    console.log(e.target.value);
     this.setState({[e.target.name] : e.target.value});
   }
   submit() {
     const { username, password } = this.state;
-    store.dispatch({type: 'USER_LOGIN', data: {username: username, password: password}})
+
+    axios.post('http://localhost:8080/login', {username, password})
+    .then(res => {
+      return document.location.reload()
+    })
+    .catch(err => {
+      this.setState({loginError: err.response.data});
+      setTimeout(() => this.setState({loginError: null}), 5000)
+    })
   }
   componentDidMount() {
     this.unsubscribe = store.subscribe(() => {
@@ -39,12 +49,12 @@ export default class Login extends Component {
   }
   render() {
     const { users, loginSuccessful, loginError } = this.state;
-    // if (loginSuccessful) alert('Bienvenue')
+
     return(
       <div style={styles.container}>
         <div style={styles.form} onKeyPress={(e) => {if (e.key === 'Enter') this.submit()}}>
           <select style={styles.select} name="username" value={this.state.username} onChange={this.onInputChange.bind(this)}>
-            {this.state.users.map((user, key) => {
+            {users.map((user, key) => {
               return <option value={user.username}>{user.username}</option>
             })}
           </select>
@@ -107,3 +117,5 @@ const styles = {
     marginBottom: '1em'
   }
 }
+
+export default withRouter(Login)

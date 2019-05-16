@@ -16,9 +16,15 @@ export default class AvisOpen extends Component {
 
     this.handleInput = this.handleInput.bind(this);
     this.submitResponse = this.submitResponse.bind(this);
+    this.submitOnEnter = this.submitOnEnter.bind(this);
   }
   handleInput(e) {
     this.setState({response: e.target.value});
+  }
+  submitOnEnter(e) {
+    if (e.key === "Enter") {
+      this.submitResponse();
+    }
   }
   submitResponse() {
     const { avis } = this.props;
@@ -27,17 +33,26 @@ export default class AvisOpen extends Component {
       messages: [
         ...avis.messages,
          {from: 'foyer', content: this.state.response}
-      ]
+      ],
+      newMessageFromFoyer: avis.newMessageFromFoyer + 1
     }
     store.dispatch({type: 'EDIT_AVIS', data: updatedData})
+    this.setState({response: ""});
+  }
+  componentDidMount() {
+    document.addEventListener('keypress', this.submitOnEnter);
+    store.dispatch({type: 'EDIT_AVIS', data: {...this.props.avis, newMessageFromResident: 0}})
+  }
+  componentWillUnmount() {
+    document.removeEventListener('keypress', this.submitOnEnter)
   }
   render() {
     const { avis } = this.props;
-    console.log(avis.solved);
+
     return(
       <div style={{position: 'relative'}}>
         <i onClick={this.props.back} style={{...styles.button, left: 0}} className="fas fa-arrow-left" />
-        <h1 style={{margin: '1em'}}>Discussion avec {avis.resident}</h1>
+        <h1 style={{margin: '1em'}}>Discussion avec {avis.resident.gender} {avis.resident.lastname} {avis.resident.firstname}</h1>
         <i onClick={this.props.toggleSolve} style={{...styles.button, right: 0, color: avis.solved ? 'green' : 'black'}} className="fas fa-check" />
 
         <div style={styles.messageList}>
@@ -65,10 +80,11 @@ const Message = (props) => {
 
   const style = {
     ...styles.message,
-    marginLeft: from === 'foyer' ? 'auto' : 0,
-    marginRight: from === 'foyer' ? 0 : 'auto',
+    marginLeft: from === 'resident' ? 'auto' : 0,
+    marginRight: from === 'resident' ? 0 : 'auto',
+    background: from === 'resident' ? "#a9a6a6" : "#6666FF"
   }
-  var className = "talk-bubble tri-right btm-" + (from === "foyer" ? "right" : "left") +"-in";
+  var className = "talk-bubble tri-right btm-" + (from === "resident" ? "right" : "left") +"-in";
   return (
     <div style={style} className={className}>
       <div className="talktext">
@@ -86,6 +102,7 @@ const styles = {
   },
   message: {
     margin: '1em',
+    color: 'white'
   },
   sendBtn: {
     width: '60%'
